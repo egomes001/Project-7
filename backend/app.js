@@ -2,6 +2,10 @@ const express = require('express');
 
 const app = express();
 
+// new way, old way was "body parser"
+// allow the use of request.body
+app.use(express.json());
+
 // No route specified because we want the middleware to be appplied to every routes of the server
 app.use((request, response, next) => {
     response.setHeader('Access-Control-Allow-Origin', '*');
@@ -10,7 +14,14 @@ app.use((request, response, next) => {
     next();
 });
 
-app.use('/api/books', (request, response, next) => {
+app.post('/api/books', (request, response, next) => {
+    console.log(request.body);
+    response.status(201).json({
+        message: 'Book saved'
+    });
+});
+
+app.get('/api/books', (request, response, next) => {
     const books = [
         {
             userId : 'shifldhjfjHJKHH',
