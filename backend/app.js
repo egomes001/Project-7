@@ -34,40 +34,9 @@ app.post('/api/books', (request, response, next) => {
 });
 
 app.get('/api/books', (request, response, next) => {
-    const books = [
-        {
-            userId : 'shifldhjfjHJKHH',
-            title : 'Titre du Livre',
-            author : 'Super Auteur',
-            imageUrl : '#',
-            year: '2024',
-            genre: 'genre',
-            ratings : [
-            {
-            userId : 'shifldhjfj367BG',
-            grade : 4
-            }
-            ], 
-            averageRating : null
-        },
-        {
-            userId : 'shifldhjfj367BG',
-            title : 'Super Titre',
-            author : 'Super Auteur',
-            imageUrl : '#',
-            year: '2022',
-            genre: 'genre',
-            ratings : [
-            {
-            userId : 'shifldhjfjHJKHH',
-            grade : 3
-            }
-            ], 
-            averageRating : null
-        }
-    ];
-    response.status(200).json(books);
-    console.log('Response successfully sent !');
+    Book.find()
+        .then(books => response.status(200).json(books))
+        .catch(error => response.status(400).json({ error }));
 });
 
 module.exports = app;
