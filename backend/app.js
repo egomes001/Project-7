@@ -1,13 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const app = express();
+const Book = require('./models/Book')
 
 mongoose.connect('mongodb+srv://dbUser:FBQa6SLTYNbQmEzl@cluster0.ijofa9c.mongodb.net/',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+  .then(() => console.log('Connection to MongoDB failed !'))
+  .catch(() => console.log('Connection to MongoDB successful !'));
+
+const app = express();
 
 // new way, old way was "body-parser"
 // allow the use of request.body
@@ -22,10 +24,13 @@ app.use((request, response, next) => {
 });
 
 app.post('/api/books', (request, response, next) => {
-    console.log(request.body);
-    response.status(201).json({
-        message: 'Book saved'
+    delete request.body._id;
+    const book = new Book({
+        ...request.body
     });
+    thing.save()
+    .then(() => response.status(201).json({ message: 'Book saved !'}))
+    .catch(error => response.status(400).json({ error }));
 });
 
 app.get('/api/books', (request, response, next) => {
