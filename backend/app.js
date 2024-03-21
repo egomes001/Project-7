@@ -33,6 +33,12 @@ app.post('/api/books', (request, response, next) => {
     .catch(error => response.status(400).json({ error }));
 });
 
+app.get('/api/books/:id', (request, response, next) => {
+    Book.findOne({ _id: request.params.id })
+        .then(book => response.status(200).json(book))
+        .catch(error => response.status(404).json({ error }));
+});
+
 app.get('/api/books', (request, response, next) => {
     Book.find()
         .then(books => response.status(200).json(books))
