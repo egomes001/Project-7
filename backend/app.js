@@ -2,8 +2,9 @@ const express = require('express');
 
 const app = express();
 
-// new way, old way was "body parser"
+// new way, old way was "body-parser"
 // allow the use of request.body
+// password: FBQa6SLTYNbQmEzl
 app.use(express.json());
 
 // No route specified because we want the middleware to be appplied to every routes of the server
