@@ -2,7 +2,7 @@ const express = require('express');
 const auth = require('auth');
 const router = express.Router();
 
-const bookController = require('../controllers/books');
+const bookController = require('../controllers/books.controller');
 
 router.get('/', auth, bookController.getAllBooks);
 router.post('/', auth, bookController.createBook);

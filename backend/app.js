@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const bookRoutes = require('./routes/books');
-const userRoutes = require('./routes/user');
+const bookRoutes = require('./routes/books.routes');
+const userRoutes = require('./routes/user.routes');
 
 mongoose.connect('mongodb+srv://dbUser:FBQa6SLTYNbQmEzl@cluster0.ijofa9c.mongodb.net/',
   { useNewUrlParser: true,
