@@ -1,4 +1,5 @@
 const multer = require('multer');
+const sharp = require('sharp'); // Import sharp library
 
 const MIME_TYPES = {
     'image/jpg': 'jpg',
@@ -17,4 +18,27 @@ const storage = multer.diskStorage({
     }
  });
 
- module.exports = multer({ storage }).single('image');
+ const upload = multer({ storage }).single('image');
+
+ const compressImage = (request, response, next) => {
+    if (!request.file) {
+        return next();
+    }
+
+    sharp(request.file.path)
+        .resize(200)
+        .toBuffer((error, buffer) => {
+            if (error) {
+                return next(error);
+            }
+            sharp(buffer)
+                .toFile(request.file.path, (err, info) => {
+                    if (err) {
+                        return next(err);
+                    }
+                    next();
+                });
+        });
+};
+
+module.exports = { upload, compressImage };

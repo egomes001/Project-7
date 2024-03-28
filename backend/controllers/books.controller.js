@@ -1,8 +1,6 @@
 const fs = require('fs')
 const Book = require('../models/Book');
 
-const MAX_IMAGE_SIZE = 4 * 1000 * 1000;
-
 /**
  * retrieve all books
  */
@@ -19,10 +17,6 @@ exports.createBook = (request, response, next) => {
     const bookObject = JSON.parse(request.body.book);
     delete bookObject._id;
     delete bookObject._userid;
-
-    if (request.file.size > MAX_IMAGE_SIZE_BYTES) {
-        return response.status(400).json({ error: `Image size exceeds the limit of ${MAX_IMAGE_SIZE}Mo` });
-    }
 
     const book = new Book({
         ...bookObject,
@@ -41,10 +35,6 @@ exports.editBook = (request, response, next) => {
         imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`
     } : { ...request.body}; 
     delete bookObject._userid;
-
-    if (request.file && request.file.size > MAX_IMAGE_SIZE_BYTES) {
-        return response.status(400).json({ error: `Image size exceeds the limit of ${MAX_IMAGE_SIZE}Mo` });
-    }
 
     Book.findOne({ _id: request.params.id })
      .then((book) => {
