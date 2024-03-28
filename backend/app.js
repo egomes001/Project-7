@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const bookRoutes = require('./routes/books');
+const userRoutes = require('./routes/user');
 
 mongoose.connect('mongodb+srv://dbUser:FBQa6SLTYNbQmEzl@cluster0.ijofa9c.mongodb.net/',
   { useNewUrlParser: true,
@@ -25,6 +26,7 @@ app.use((request, response, next) => {
     next();
 });
 
-app.use('/api/books', bookRoutes)
+app.use('/api/books', bookRoutes);
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
