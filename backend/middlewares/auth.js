@@ -8,6 +8,7 @@ module.exports = (request, response, next) => {
         request.auth = {
             userId: userId
         };
+        next();
     } catch(error) {
         response.status(401).json({ error });
     }
