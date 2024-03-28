@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const cors = require('cors');
 const mongoose = require('mongoose');
 
 const bookRoutes = require('./routes/books.routes');
@@ -14,8 +13,6 @@ mongoose.connect('mongodb+srv://dbUser:FBQa6SLTYNbQmEzl@cluster0.ijofa9c.mongodb
   .catch(() => console.log('Connection to MongoDB failed !'));
 
 const app = express();
-
-app.use(cors({ origin: 'http://localhost:3000' }));
 
 // new way, old way was "body-parser"
 // allow the use of request.body

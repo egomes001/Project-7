@@ -25,6 +25,7 @@ function SignIn({ setUser }) {
       const response = await axios({
         method: 'post',
         url: API_ROUTES.SIGN_IN,
+        headers: { 'Content-Type': 'application/json' },
         data: {
           email,
           password,
