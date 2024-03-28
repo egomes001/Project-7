@@ -3,7 +3,7 @@ const Book = require('../models/Book');
 /**
  * retrieve all books
  */
-exports.getBooks = (request, response, next) => {
+exports.getAllBooks = (request, response, next) => {
     Book.find()
      .then(books => response.status(200).json(books))
      .catch(error => response.status(400).json({ error }));
