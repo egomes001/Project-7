@@ -13,18 +13,37 @@ exports.getAllBooks = (request, response, next) => {
  * manage individual book
  */
 exports.createBook = (request, response, next) => {
-    delete request.body._id;
+    const bookObject = JSON.parse(request.body.book);
+    delete bookObject._id;
+    delete bookObject._userid;
     const book = new Book({
-        ...request.body
+        ...bookObject,
+        userId: request.ath.userId,
+        imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`
     });
+
     book.save()
-    .then(() => response.status(201).json({ message: 'Book saved !'}))
-    .catch(error => response.status(400).json({ error }));
+     .then(() => response.status(201).json({ message: 'Book saved !'}))
+     .catch(error => response.status(400).json({ error }));
 };
 
 exports.editBook = (request, response, next) => {
-    Book.updateOne({ _id: request.params.id }, { ...request.body, _id: request.params.id })
-     .then(() => response.status(200).json({ message: 'Book modified !' }))
+    const bookObject = request.file ? {
+        ...JSON.parse(request.body.book),
+        imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`
+    } : { ...request.body}; 
+    delete bookObject._userid;
+
+    Book.findOne({ _id: request.params.id })
+     .then((book) => {
+        if (book.userId != request.auth.userId) {
+            response.status(401).json({ message: 'Not allowed' });
+        } else {
+            Book.updateOne({ _id: request.params.id }, { ...bookObject, _id: request.params.id })
+            .then(() => response.status(200).json({ message: 'Book modified !' }))
+            .catch(error => response.status(400).json({ error }));  
+        }
+     })
      .catch(error => response.status(400).json({ error })); 
 };
 
