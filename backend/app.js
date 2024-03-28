@@ -5,7 +5,8 @@ const bookRoutes = require('./routes/books');
 
 mongoose.connect('mongodb+srv://dbUser:FBQa6SLTYNbQmEzl@cluster0.ijofa9c.mongodb.net/',
   { useNewUrlParser: true,
-    useUnifiedTopology: true })
+    useUnifiedTopology: true
+  })
   .then(() => console.log('Connection to MongoDB successful !'))
   .catch(() => console.log('Connection to MongoDB failed !'));
 
@@ -14,6 +15,7 @@ const app = express();
 // new way, old way was "body-parser"
 // allow the use of request.body
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // No route specified because we want the middleware to be appplied to every routes of the server
 app.use((request, response, next) => {

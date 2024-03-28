@@ -8,8 +8,6 @@ exports.createBook = (request, response, next) => {
         imageUrl: request.body.imageUrl,
         year: request.body.year,
         genre: request.body.genre,
-        ratings: request.body.ratings,
-        averageRating: request.body.averageRating  
     });
     book.save().then(
         () => {

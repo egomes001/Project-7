@@ -8,10 +8,9 @@ router.post('/', (request, response, next) => {
     const book = new Book({
         ...request.body
     });
-    book.save()
+    return book.save()
      .then(() => response.status(201).json({ message: 'Book saved !'}))
      .catch(error => response.status(400).json({ error }));
-    next();
 });
 
 router.get('/:id', (request, response, next) => {
