@@ -1,17 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const Book = require('../models/Book');
+const bookController = require('../controllers/books');
 
-router.post('/', (request, response, next) => {
-    delete request.body._id;
-    const book = new Book({
-        ...request.body
-    });
-    return book.save()
-     .then(() => response.status(201).json({ message: 'Book saved !'}))
-     .catch(error => response.status(400).json({ error }));
-});
+router.post('/', bookController.createBook);
 
 router.get('/:id', (request, response, next) => {
     Book.findOne({ _id: request.params.id })
