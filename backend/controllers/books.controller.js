@@ -1,3 +1,4 @@
+const fs = require('fs')
 const Book = require('../models/Book');
 
 /**
@@ -48,9 +49,20 @@ exports.editBook = (request, response, next) => {
 };
 
 exports.deleteBook = (request, response, next) => {
-    Book.deleteOne({ _id: request.params.id })
-     .then(() => response.status(200).json({ message: 'Book deleted !' }))
-     .catch(error => response.status(400).json({ error }));
+    Book.findOne({ _id: request.params.id })
+     .then(book => {
+        if (book.userId != request.auth.userId) {
+            response.status(401).json({ message: 'Not allowed' });
+        } else {
+            const filename = thing.imageUrl.split('/images')[1];
+            fs.unlink(`images/${filename}`, () => {
+                Book.deleteOne({ _id: request.params.id })
+                 .then(() => response.status(200).json({ message: 'Book deleted !' }))
+                 .catch(error => response.status(400).json({ error }));
+            })
+        }
+     })
+     .catch(error => response.status(500).json({ error }));
 };
 
 exports.getOneBook = (request, response, next) => {
