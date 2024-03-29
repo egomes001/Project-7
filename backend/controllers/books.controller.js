@@ -14,15 +14,20 @@ exports.getAllBooks = (request, response, next) => {
  * manage individual book
  */
 exports.createBook = (request, response, next) => {
-    const bookObject = request.body;
-    delete bookObject._id;
-    delete bookObject._userid;
+    const bookObject = JSON.parse(request.body.book);
 
+    const userId = request.auth.userId;
+    const grade = bookObject.ratings[0].grade
     const book = new Book({
-        ...bookObject,
-        userId: request.auth.userId,
-        imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`
+        userId: userId,
+        title: bookObject.title,
+        author: bookObject.author,
+        year: bookObject.year,
+        genre: bookObject.genre,
+        imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`,
+        ratings: [{ userId: userId, grade: grade }]
     });
+    console.log(bookObject)
 
     book.save()
      .then(() => response.status(201).json({ message: 'Book saved !'}))
