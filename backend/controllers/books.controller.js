@@ -14,13 +14,13 @@ exports.getAllBooks = (request, response, next) => {
  * manage individual book
  */
 exports.createBook = (request, response, next) => {
-    const bookObject = JSON.parse(request.body.book);
+    const bookObject = request.body;
     delete bookObject._id;
     delete bookObject._userid;
 
     const book = new Book({
         ...bookObject,
-        userId: request.ath.userId,
+        userId: request.auth.userId,
         imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`
     });
 
