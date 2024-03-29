@@ -28,7 +28,12 @@ const storage = multer.diskStorage({
     }
 
     sharp(request.file.path)
-        .resize(200)
+        .resize({
+            width: 200,
+            height: 260,
+            fit: sharp.fit.cover,
+            position: sharp.strategy.entropy
+        })
         .toBuffer((error, buffer) => {
             if (error) {
                 return next(error);
