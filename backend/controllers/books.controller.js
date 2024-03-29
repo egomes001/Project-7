@@ -15,23 +15,38 @@ exports.getAllBooks = (request, response, next) => {
  */
 exports.createBook = (request, response, next) => {
     const bookObject = JSON.parse(request.body.book);
-
     const userId = request.auth.userId;
-    const grade = bookObject.ratings[0].grade
+    const grade = bookObject.ratings[0].grade;
+
+    const imageUrl = `${request.protocol}://${request.get('host')}/images/${request.file.filename}`;
+
     const book = new Book({
         userId: userId,
         title: bookObject.title,
         author: bookObject.author,
         year: bookObject.year,
         genre: bookObject.genre,
-        imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`,
+        imageUrl: imageUrl,
         ratings: [{ userId: userId, grade: grade }]
     });
 
     book.save()
-     .then(() => response.status(201).json({ message: 'Book saved !'}))
-     .catch(error => response.status(400).json({ error }));
+     .then(() => {
+         response.status(201).json({ message: 'Book saved !'});
+     })
+     .catch(error => {
+         if (request.file) {
+             fs.unlink(request.file.path, (err) => {
+                 if (err) {
+                     console.error("Error deleting image:", err);
+                 }
+                 console.log("Image deleted");
+             });
+         }
+         response.status(400).json({ error });
+     });
 };
+
 
 exports.editBook = (request, response, next) => {
     const bookObject = request.file ? {
