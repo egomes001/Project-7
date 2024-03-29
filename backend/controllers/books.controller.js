@@ -27,7 +27,8 @@ exports.createBook = (request, response, next) => {
         year: bookObject.year,
         genre: bookObject.genre,
         imageUrl: imageUrl,
-        ratings: [{ userId: userId, grade: grade }]
+        ratings: [{ userId: userId, grade: grade }],
+        averageRating: bookObject.averageRating
     });
 
     book.save()
@@ -74,7 +75,7 @@ exports.deleteBook = (request, response, next) => {
         if (book.userId != request.auth.userId) {
             response.status(403).json({ message: 'Unauthorized request' });
         } else {
-            const filename = thing.imageUrl.split('/images')[1];
+            const filename = book.imageUrl.split('/images')[1];
             fs.unlink(`images/${filename}`, () => {
                 Book.deleteOne({ _id: request.params.id })
                  .then(() => response.status(200).json({ message: 'Book deleted !' }))
