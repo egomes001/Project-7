@@ -27,7 +27,6 @@ exports.createBook = (request, response, next) => {
         imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`,
         ratings: [{ userId: userId, grade: grade }]
     });
-    console.log(bookObject)
 
     book.save()
      .then(() => response.status(201).json({ message: 'Book saved !'}))
