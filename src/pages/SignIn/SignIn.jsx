@@ -8,6 +8,10 @@ import { storeInLocalStorage } from '../../lib/common';
 import { ReactComponent as Logo } from '../../images/Logo.svg';
 import styles from './SignIn.module.css';
 
+const translation = require('../../translation.json');
+
+const lang = translation.fr;
+
 function SignIn({ setUser }) {
   const navigate = useNavigate();
   const { user, authenticated } = useUser();
@@ -41,7 +45,7 @@ function SignIn({ setUser }) {
       }
     } catch (err) {
       console.log(err);
-      setNotification({ error: true, message: err.message });
+      setNotification({ error: true, message: lang.loginError });
       console.log('Some error occured during signing in: ', err);
     } finally {
       setIsLoading(false);
@@ -65,7 +69,7 @@ function SignIn({ setUser }) {
       }
       setNotification({ error: false, message: 'Votre compte a bien été créé, vous pouvez vous connecter' });
     } catch (err) {
-      setNotification({ error: true, message: err.message });
+      setNotification({ error: true, message: lang.signupError });
       console.log('Some error occured during signing up: ', err);
     } finally {
       setIsLoading(false);
