@@ -1,8 +1,15 @@
 const fs = require('fs')
 const Book = require('../models/Book');
 
+/***********************************************************
+ *     RETRIEVE ALL BOOKS
+ ***********************************************************/
 /**
- * retrieve all books
+ * 
+ * @param {Object} request - The request object containing information about the HTTP request.
+ * @param {Object} response - The response object used to send HTTP responses.
+ * @param {Function} next - The next middleware function in the Express middleware chain.
+ * @returns {Promise} A Promise representing the asynchronous operation.
  */
 exports.getAllBooks = (request, response, next) => {
     Book.find()
@@ -10,8 +17,16 @@ exports.getAllBooks = (request, response, next) => {
      .catch(error => response.status(400).json({ error }));
 };
 
+/***********************************************************
+ *      MANAGE INDIVIDUAL BOOK
+ ***********************************************************/
 /**
- * manage individual book
+ * Adds new book to the db.
+ * 
+ * @param {Object} request - The request object containing information about the HTTP request.
+ * @param {Object} response - The response object used to send HTTP responses.
+ * @param {Function} next - The next middleware function in the Express middleware chain.
+ * @returns {Promise} A Promise representing the asynchronous operation.
  */
 exports.createBook = (request, response, next) => {
     const bookObject = JSON.parse(request.body.book);
@@ -48,7 +63,14 @@ exports.createBook = (request, response, next) => {
      });
 };
 
-
+/**
+ * Edit on book on its id.
+ * 
+ * @param {Object} request - The request object containing information about the HTTP request.
+ * @param {Object} response - The response object used to send HTTP responses.
+ * @param {Function} next - The next middleware function in the Express middleware chain.
+ * @returns {Promise} A Promise representing the asynchronous operation.
+ */
 exports.editBook = (request, response, next) => {
     const bookObject = request.file ? {
         ...JSON.parse(request.body.book),
@@ -69,6 +91,14 @@ exports.editBook = (request, response, next) => {
      .catch(error => response.status(400).json({ error })); 
 };
 
+/**
+ * Delete one book on its id.
+ * 
+ * @param {Object} request - The request object containing information about the HTTP request.
+ * @param {Object} response - The response object used to send HTTP responses.
+ * @param {Function} next - The next middleware function in the Express middleware chain.
+ * @returns {Promise} A Promise representing the asynchronous operation.
+ */
 exports.deleteBook = (request, response, next) => {
     Book.findOne({ _id: request.params.id })
      .then(book => {
@@ -86,14 +116,31 @@ exports.deleteBook = (request, response, next) => {
      .catch(error => response.status(500).json({ error }));
 };
 
+/**
+ * Retrieves one book by its id
+ * 
+ * @param {Object} request - The request object containing information about the HTTP request.
+ * @param {Object} response - The response object used to send HTTP responses.
+ * @param {Function} next - The next middleware function in the Express middleware chain.
+ * @returns {Promise} A Promise representing the asynchronous operation.
+ */
 exports.getOneBook = (request, response, next) => {
     Book.findOne({ _id: request.params.id })
      .then(book => response.status(200).json(book))
      .catch(error => response.status(404).json({ error }));
 };
 
+/***********************************************************
+ *      RATING
+ ***********************************************************/
+
 /**
- * books' rating
+ * Retrieves the best-rated books.
+ * 
+ * @param {Object} request - The request object containing information about the HTTP request.
+ * @param {Object} response - The response object used to send HTTP responses.
+ * @param {Function} next - The next middleware function in the Express middleware chain.
+ * @returns {Promise} A Promise representing the asynchronous operation.
  */
 exports.getBestBooks = async (request, response, next) => {
     try {
@@ -114,6 +161,7 @@ exports.getBestBooks = async (request, response, next) => {
 /**
  * Creates a rating for a book.
  * I the user already rated this book, an error is returned.
+ * 
  * @param {Object} request - The request object containing information about the HTTP request.
  * @param {Object} response - The response object used to send HTTP responses.
  * @param {Function} next - The next middleware function in the Express middleware chain.
