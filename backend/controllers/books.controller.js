@@ -177,7 +177,7 @@ exports.createRating = async (request, response, next) => {
         } else {
             const newRating = {
                 userId: request.body.userId,
-                grade: request.body.grade
+                grade: request.body.rating
             };
             book.ratings.push(newRating);
 
@@ -189,8 +189,9 @@ exports.createRating = async (request, response, next) => {
             const totalRatings = grades.length;
             const sumOfRatings = grades.reduce((accumulator, rating) => accumulator + rating, 0);
             const averageRating = sumOfRatings / totalRatings;
-
+            
             book.averageRating = averageRating;
+            book.id = request.params.id;
 
             await book.save();
             return response.status(200).json({ message: 'Rating added successfully!' });
