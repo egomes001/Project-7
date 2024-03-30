@@ -152,7 +152,7 @@ exports.getBestBooks = async (request, response, next) => {
 
         const bestBooks = books.slice(0, 3);
 
-        return response.status(200).json({ bestBooks });
+        return response.status(200).json( bestBooks );
     } catch (error) {
         return response.status(400).json({ error });
     }
