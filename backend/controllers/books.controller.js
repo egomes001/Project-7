@@ -95,10 +95,30 @@ exports.getOneBook = (request, response, next) => {
 /**
  * books' rating
  */
-exports.getBestBooks = (request, response, next) => {
-    
+exports.getBestBooks = async (request, response, next) => {
+    try {
+        const books = await Book.find();
+        
+        books.sort((book1, book2) => {
+            return book2.averageRating - book1.averageRating;
+        });
+
+        const bestBooks = books.slice(0, 3);
+
+        return response.status(200).json({ bestBooks });
+    } catch (error) {
+        return response.status(400).json({ error });
+    }
 };
 
+/**
+ * Creates a rating for a book.
+ * I the user already rated this book, an error is returned.
+ * @param {Object} request - The request object containing information about the HTTP request.
+ * @param {Object} response - The response object used to send HTTP responses.
+ * @param {Function} next - The next middleware function in the Express middleware chain.
+ * @returns {Promise} A Promise representing the asynchronous operation.
+ */
 exports.createRating = async (request, response, next) => {
     try {
         const book = await Book.findOne({ _id: request.params.id });
@@ -121,7 +141,7 @@ exports.createRating = async (request, response, next) => {
             const totalRatings = grades.length;
             const sumOfRatings = grades.reduce((accumulator, rating) => accumulator + rating, 0);
             const averageRating = sumOfRatings / totalRatings;
-            
+
             book.averageRating = averageRating;
 
             await book.save();
