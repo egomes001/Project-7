@@ -91,3 +91,43 @@ exports.getOneBook = (request, response, next) => {
      .then(book => response.status(200).json(book))
      .catch(error => response.status(404).json({ error }));
 };
+
+/**
+ * books' rating
+ */
+exports.getBestBooks = (request, response, next) => {
+    
+};
+
+exports.createRating = async (request, response, next) => {
+    try {
+        const book = await Book.findOne({ _id: request.params.id });
+
+        const userRating = book.ratings.find((rating) => rating.userId === request.body.userId);
+        if (userRating) {
+            return response.status(400).json({ message: 'You have already rated this book' });
+        } else {
+            const newRating = {
+                userId: request.body.userId,
+                grade: request.body.grade
+            };
+            book.ratings.push(newRating);
+
+            let grades = [];
+            for (const rating of book.ratings) {
+                grades.push(rating.grade);
+            }
+
+            const totalRatings = grades.length;
+            const sumOfRatings = grades.reduce((accumulator, rating) => accumulator + rating, 0);
+            const averageRating = sumOfRatings / totalRatings;
+            
+            book.averageRating = averageRating;
+
+            await book.save();
+            return response.status(200).json({ message: 'Rating added successfully!' });
+        }
+    } catch (error) {
+        return response.status(400).json({ error: error.message });
+    }
+};
