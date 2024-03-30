@@ -194,7 +194,7 @@ exports.createRating = async (request, response, next) => {
             book.id = request.params.id;
 
             await book.save();
-            return response.status(200).json({ message: 'Rating added successfully!' });
+            return response.status(200).json( book );
         }
     } catch (error) {
         return response.status(400).json({ error: error.message });
