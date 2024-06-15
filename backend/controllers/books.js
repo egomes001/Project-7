@@ -69,6 +69,23 @@ exports.modifyBook = (req, res) => {
     });
 };
 
+exports.rateBook = (req, res) => {
+  const userRating = { userId: req.body.userId, grade: req.body.rating };
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      book.ratings.push(userRating);
+      const avgRating = book.ratings.reduce((acc, cur) => acc + cur.grade, 0) / book.ratings.length;
+      Book.updateOne({ _id: req.params.id }, { averageRating: avgRating })
+        .then(
+          book.save()
+            .then(() => res.status(201).json(book))
+            .catch((error) => res.status(400).json({ error })),
+        )
+        .catch((error) => res.status(404).json({ error }));
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+
 exports.getOneBook = (req, res) => {
   Book.findOne({ _id: req.params.id })
     .then((book) => res.status(200).json(book))
@@ -76,7 +93,13 @@ exports.getOneBook = (req, res) => {
 };
 
 exports.getAllBooks = (req, res) => {
-  Book.find()
+  Book.find().sort({ averageRating: -1 }).limit(3)
+    .then((books) => res.status(200).json(books))
+    .catch((error) => res.status(400).json({ error }));
+};
+
+exports.getBestRatings = (req, res) => {
+  Book.find().sort({ averageRating: -1 }).limit(5)
     .then((books) => res.status(200).json(books))
     .catch((error) => res.status(400).json({ error }));
 };
