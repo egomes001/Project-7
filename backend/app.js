@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config();
 
 const bookRoutes = require('./routes/books');
 const userRoutes = require('./routes/user');
@@ -8,7 +9,7 @@ const userRoutes = require('./routes/user');
 const app = express();
 
 mongoose.connect(
-  'mongodb+srv://enzogomes:eFx6vorn37xtNCwy@cluster0.pjrbrqu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+  `mongodb+srv://enzogomes:${process.env.DB}@cluster0.pjrbrqu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
